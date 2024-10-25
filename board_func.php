@@ -167,15 +167,15 @@ function brd_add_field($id, $prop)
 // --------------------------------------------------------------------------------------
 // ----                                     
 // --------------------------------------------------------------------------------------
-function brdlin_get_content($id,$prop)
+function brdlin_get_content($id, $prop)
 {
     global $con;
 
     $lineContent = array();
-    foreach($prop['fields'] as $field){
-        $cntId = array_merge($id,array("field"=>$field['id']));
-        if ($content = brdcnt_get_content($cntId)){
-            array_push($lineContent,$content);
+    foreach ($prop['fields'] as $field) {
+        $cntId = array_merge($id, array("field" => $field['id']));
+        if ($content = brdcnt_get_content($cntId)) {
+            array_push($lineContent, $content);
         }
     }
     return $lineContent;
@@ -233,12 +233,12 @@ function brdcnt_get_content($id)
 {
     $content = brdcnt_get_content_basic($id);
 
-    if (!$content){
+    if (!$content) {
         return null;
     }
 
-    if (!$content['fields_generated']){
-        return brdcnt_update_generated_columns($id,$content);
+    if (!$content['fields_generated']) {
+        return brdcnt_update_generated_columns($id, $content);
     }
     return $content;
 }
@@ -299,10 +299,14 @@ function brdcnt_set_content($id, $prop)
                 $sep = ',';
                 break;
             case "src_from_division":
-            case "src_from_word":
             case "src_to_division":
+                $sql_set .= $sep . $attr . " = " . $val;
+                $sep = ',';
+                $sql_set .= $sep . "fields_generated = FALSE";
+                break;
+            case "src_from_word":
             case "src_to_word":
-                $sql_set .= $sep . $attr . " = '" . $val . "'";
+                $sql_set .= $sep . $attr . " = " . $val;
                 $sep = ',';
                 break;
             case "src_from_name":
@@ -336,16 +340,16 @@ function brdcnt_set_content($id, $prop)
 // --------------------------------------------------------------------------------------
 // ---- 
 // --------------------------------------------------------------------------------------
-function brdcnt_update_generated_columns($id,$content=null)
+function brdcnt_update_generated_columns($id, $content = null)
 {
     global $con;
 
-    if (!$content){
+    if (!$content) {
         $content = brdcnt_get_content_basic($id);
     }
 
-    if ($content['src_research'] > 0 && $content['src_from_division'] > 0){
-        return brdcnt_update_generated_research($id,$content);
+    if ($content['src_research'] > 0 && $content['src_from_division'] > 0) {
+        return brdcnt_update_generated_research($id, $content);
     }
 
     $sql1 = "UPDATE a_proj_elm_board_content
@@ -364,7 +368,7 @@ function brdcnt_update_generated_columns($id,$content=null)
 // --------------------------------------------------------------------------------------
 // ---- 
 // --------------------------------------------------------------------------------------
-function brdcnt_update_generated_research($id,$content)
+function brdcnt_update_generated_research($id, $content)
 {
     global $con;
 
@@ -420,8 +424,8 @@ function brdcnt_update_generated_research($id,$content)
     }
 
     return array_merge($content, array(
-        "gen_from_position" => $from_position,
-        "gen_to_position" => $to_position,
+        "gen_from_position" => (float)$from_position,
+        "gen_to_position" => (float)$to_position,
         "gen_from_text" => $row_from['text'],
         "gen_to_text" => $row_to['text']
     ));
