@@ -23,7 +23,7 @@ function elmbrd_get_fields($id)
     global $con;
 
     $sql = "SELECT field_id, title,field_type,width_pct,position,
-                   parent_field,display_whole_verse
+                   parent_field,display_whole_verse,reference_style
             FROM a_proj_elm_board_fields
             WHERE project_id = " . $id['proj'] . "
               AND element_id = " . $id['elm'] . "
@@ -42,7 +42,8 @@ function elmbrd_get_fields($id)
             'type' => $row['field_type'],
             'width_pct' => (int)$row['width_pct'],
             'parent_field' => (int)$row['parent_field'],
-            'display_whole_verse' => (int)$row['display_whole_verse']
+            'display_whole_verse' => (int)$row['display_whole_verse'],
+            'reference_style' => (int)$row['reference_style']
         ));
     };
 
@@ -144,7 +145,7 @@ function brd_add_field($id, $prop)
     $sql = "INSERT INTO a_proj_elm_board_fields
                 (project_id, element_id, field_id, position,
                  title, field_type, width_pct, parent_field,
-                 display_whole_verse) 
+                 display_whole_verse,reference_style) 
             VALUES(" . $id['proj'] . ", 
                 " . $id['elm'] . ", 
                 " . $fieldId . ",
@@ -153,7 +154,7 @@ function brd_add_field($id, $prop)
                 '" . $prop['type'] . "',
                 10,
                 " . $parentField . ",
-                TRUE)";
+                TRUE,0)";
     $result = mysqli_query($con, $sql);
     if (!$result) {
         exit_error('Error 3 in elm_func.php: ' . mysqli_error($con));
@@ -165,7 +166,8 @@ function brd_add_field($id, $prop)
         'type' => $prop['type'],
         "width_pct" => 10,
         "parent_field" => $parentField,
-        "display_whole_verse" => true
+        "display_whole_verse" => true,
+        "reference_style" => 0
     );
 }
 
@@ -269,6 +271,7 @@ function brdfld_set_field($id, $prop)
             case "position":
             case "width_pct":
             case "display_whole_verse":
+            case "reference_style":
                 $sql_set .= $sep . $attr . " = " . (int)$val;
                 $sep = ',';
                 break;
@@ -289,43 +292,6 @@ function brdfld_set_field($id, $prop)
 
     // brdfld_set_parent_field($id, $prop);
 }
-
-// --------------------------------------------------------------------------------------
-// ---- set attributes
-// --------------------------------------------------------------------------------------
-// function brdfld_set_parent_field($id, $prop)
-// {
-//     global $con;
-
-//     $sql_set = '';
-//     $sep = '';
-
-//     foreach ($prop as $attr => $val) {
-//         switch ($attr) {
-//             case "display_whole_verse":
-//                 $sql_set .= $sep . $attr . " = " . (int)$val;
-//                 $sep = ',';
-//                 break;
-//         }
-//     }
-
-//     if ($sql_set != '') {
-//         $sql = "UPDATE a_proj_elm_board_fields 
-//                 SET " . $sql_set . "  
-//                 WHERE project_id = " . $id['proj'] . "
-//                 AND element_id = " . $id['elm'] . "
-//                 AND field_id = (
-//                         SELECT parent_field
-//                           FROM a_proj_elm_board_fields
-//                          WHERE project_id = " . $id['proj'] . "
-//                            AND element_id = " . $id['elm'] . "
-//                            AND field_id = " . $id['field'].")";
-//         $result = mysqli_query($con, $sql);
-//         if (!$result) {
-//             exit_error('Error 16 in elm_func.php: ' . mysqli_error($con));
-//         }
-//     }
-// }
 
 // --------------------------------------------------------------------------------------
 // ---- set attributes
