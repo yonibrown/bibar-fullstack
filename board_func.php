@@ -23,7 +23,8 @@ function elmbrd_get_fields($id)
     global $con;
 
     $sql = "SELECT field_id, title,field_type,width_pct,position,
-                   parent_field,display_whole_verse,reference_style
+                   parent_field,display_whole_verse,reference_style,
+                   src_research,src_collection,src_index
             FROM a_proj_elm_board_fields
             WHERE project_id = " . $id['proj'] . "
               AND element_id = " . $id['elm'] . "
@@ -43,7 +44,10 @@ function elmbrd_get_fields($id)
             'width_pct' => (int)$row['width_pct'],
             'parent_field' => (int)$row['parent_field'],
             'display_whole_verse' => (int)$row['display_whole_verse'],
-            'reference_style' => (int)$row['reference_style']
+            'reference_style' => (int)$row['reference_style'],
+            'src_research' => (int)$row['src_research'],
+            'src_collection' => (int)$row['src_collection'],
+            'src_index' => (int)$row['src_index']
         ));
     };
 
@@ -145,7 +149,8 @@ function brd_add_field($id, $prop)
     $sql = "INSERT INTO a_proj_elm_board_fields
                 (project_id, element_id, field_id, position,
                  title, field_type, width_pct, parent_field,
-                 display_whole_verse,reference_style) 
+                 display_whole_verse,reference_style,
+                 src_research,src_collection,src_index) 
             VALUES(" . $id['proj'] . ", 
                 " . $id['elm'] . ", 
                 " . $fieldId . ",
@@ -154,7 +159,7 @@ function brd_add_field($id, $prop)
                 '" . $prop['type'] . "',
                 10,
                 " . $parentField . ",
-                TRUE,0)";
+                TRUE,0,1,1,1)";
     $result = mysqli_query($con, $sql);
     if (!$result) {
         exit_error('Error 3 in elm_func.php: ' . mysqli_error($con));
