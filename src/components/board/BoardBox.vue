@@ -135,7 +135,7 @@ function openFieldMenu(attr) {
 }
 
 function addField(fieldType) {
-  console.log("addField", fieldType);
+  // console.log("addField", fieldType);
   element.value.addField({
     position: ordFields.nextPos(focusFieldIdx.value),
     fieldType,

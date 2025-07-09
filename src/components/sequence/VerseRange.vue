@@ -43,7 +43,7 @@ const emit = defineEmits(["changeValue"]);
 const defaultIndex = { res: 1, col: 1, idx: 1 };
 const defaultDivision = 972; /* Genesis,1,1 */
 
-console.log('props.part',props.part);
+// console.log('props.part',props.part);
 
 const fromPosition = computed(function () {
   if (props.part) {
