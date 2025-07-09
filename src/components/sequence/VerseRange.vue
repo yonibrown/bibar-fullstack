@@ -146,10 +146,10 @@ function submitValue() {
 
 const title = computed(function () {
   if (fromName.value != "") {
-    if (toName.value != "") {
-      return fromName.value + " - " + toName.value;
+    if (displayOneVerse.value) {
+      return fromName.value;
     }
-    return fromName.value;
+    return fromName.value + " - " + toName.value;
   }
   if (props.editable) {
     return "בחר פסוק...";
