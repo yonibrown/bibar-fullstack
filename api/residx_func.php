@@ -35,6 +35,17 @@ function residx_get_levels($id, $prop)
 {
     global $con;
 
+    // Check if required keys exist in $id
+    if (!isset($id['res']) || !isset($id['col']) || !isset($id['idx'])) {
+        $missing_keys = array();
+        if (!isset($id['res'])) $missing_keys[] = 'res';
+        if (!isset($id['col'])) $missing_keys[] = 'col';
+        if (!isset($id['idx'])) $missing_keys[] = 'idx';
+        
+        $id_debug = is_array($id) ? json_encode($id) : 'not an array';
+        exit_error('Error in residx_get_levels: Missing required keys (' . implode(', ', $missing_keys) . '). Received: ' . $id_debug);
+    }
+
     $filter = '';
     foreach ($prop as $attr => $val) {
         switch ($attr) {
@@ -76,10 +87,21 @@ function residx_get_max_level($id, $prop)
 {
     global $con;
 
+    // Check if required keys exist in $id
+    if (!isset($id['res']) || !isset($id['col']) || !isset($id['idx'])) {
+        $missing_keys = array();
+        if (!isset($id['res'])) $missing_keys[] = 'res';
+        if (!isset($id['col'])) $missing_keys[] = 'col';
+        if (!isset($id['idx'])) $missing_keys[] = 'idx';
+        
+        $id_debug = is_array($id) ? json_encode($id) : 'not an array';
+        exit_error('Error in residx_get_max_level: Missing required keys (' . implode(', ', $missing_keys) . '). Received: ' . $id_debug);
+    }
+
     $partOfKeyCrit = " ";
     if (array_key_exists('part_of_key', $prop)) {
         if ($prop['part_of_key']) {
-            $partOfKeyCrit = " AND part_of_key = true";
+            $partOfKeyCrit = " AND part_of_key = TRUE";
         }
     }
 
@@ -102,6 +124,17 @@ function residx_get_max_level($id, $prop)
 // --------------------------------------------------------------------------------------
 function residx_get_divisions($id, $prop)
 {
+    // Check if required keys exist in $id
+    if (!isset($id['res']) || !isset($id['col']) || !isset($id['idx'])) {
+        $missing_keys = array();
+        if (!isset($id['res'])) $missing_keys[] = 'res';
+        if (!isset($id['col'])) $missing_keys[] = 'col';
+        if (!isset($id['idx'])) $missing_keys[] = 'idx';
+        
+        $id_debug = is_array($id) ? json_encode($id) : 'not an array';
+        exit_error('Error in residx_get_divisions: Missing required keys (' . implode(', ', $missing_keys) . '). Received: ' . $id_debug);
+    }
+
     if (array_key_exists('position', $prop)) {
         // get key from position
         $key = residx_position_to_key($id, $prop);
@@ -192,6 +225,17 @@ function residx_get_level_divisions($id, $prop)
 {
     global $con;
 
+    // Check if required keys exist in $id
+    if (!isset($id['res']) || !isset($id['col']) || !isset($id['idx'])) {
+        $missing_keys = array();
+        if (!isset($id['res'])) $missing_keys[] = 'res';
+        if (!isset($id['col'])) $missing_keys[] = 'col';
+        if (!isset($id['idx'])) $missing_keys[] = 'idx';
+        
+        $id_debug = is_array($id) ? json_encode($id) : 'not an array';
+        exit_error('Error in residx_get_level_divisions: Missing required keys (' . implode(', ', $missing_keys) . '). Received: ' . $id_debug);
+    }
+
     $parent_div = "";
     if (array_key_exists('parent_div', $prop)) {
         $sql = "SELECT from_position,to_position
@@ -247,6 +291,17 @@ function residx_position_to_key($id, $prop)
 
     $list = array();
 
+    // Check if required keys exist in $id
+    if (!isset($id['res']) || !isset($id['col']) || !isset($id['idx'])) {
+        $missing_keys = array();
+        if (!isset($id['res'])) $missing_keys[] = 'res';
+        if (!isset($id['col'])) $missing_keys[] = 'col';
+        if (!isset($id['idx'])) $missing_keys[] = 'idx';
+        
+        $id_debug = is_array($id) ? json_encode($id) : 'not an array';
+        exit_error('Error in residx_position_to_key: Missing required keys (' . implode(', ', $missing_keys) . '). Received: ' . $id_debug);
+    }
+
     if (array_key_exists('division_id', $prop)) {
         // get by division
         $sql = "SELECT d.level,d.division_id,d.name1,d.name2,d.name3
@@ -301,7 +356,7 @@ function residx_position_to_key($id, $prop)
                  WHERE d.research_id = " . $id['res'] . " 
                    AND d.collection_id = " . $id['col'] . " 
                    AND d.index_id = " . $id['idx'] . " 
-                 GROUP BY d.level
+                 GROUP BY d.level,d.name1,d.name2,d.name3
                  ORDER BY d.level DESC";
         }
     } else {
@@ -359,6 +414,18 @@ function residx_position_to_key($id, $prop)
 function residx_get_level_range($id, $name, $level, $initialRange)
 {
     global $con;
+    
+    // Check if required keys exist in $id
+    if (!isset($id['res']) || !isset($id['col']) || !isset($id['idx'])) {
+        $missing_keys = array();
+        if (!isset($id['res'])) $missing_keys[] = 'res';
+        if (!isset($id['col'])) $missing_keys[] = 'col';
+        if (!isset($id['idx'])) $missing_keys[] = 'idx';
+        
+        $id_debug = is_array($id) ? json_encode($id) : 'not an array';
+        exit_error('Error in residx_get_level_range: Missing required keys (' . implode(', ', $missing_keys) . '). Received: ' . $id_debug);
+    }
+    
     $sql = "SELECT division_id,from_position,to_position
             FROM a_res_idx_division
             WHERE research_id = " . $id['res'] . " 

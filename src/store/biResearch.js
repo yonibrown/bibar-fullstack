@@ -226,6 +226,7 @@ export class biResearch {
 
   /* convert position/division to index key */
   static async getKey(seqIndex, prop) {
+    console.log('getKey', seqIndex, prop);
     const data = {
       type: "res_index",
       oper: "get_key",

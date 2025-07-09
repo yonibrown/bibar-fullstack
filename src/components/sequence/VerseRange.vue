@@ -74,7 +74,7 @@ const seqIndex = computed(function () {
     return {
       res: props.part.src_research,
       col: props.part.src_collection,
-      idx: props.part.src_index,
+      idx: props.part.src_index || 1,
     };
   }
   return defaultIndex;
