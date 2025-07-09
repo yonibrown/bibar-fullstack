@@ -48,3 +48,25 @@ watch(selected, (newVal) => {
   }
 });
 </script>
+
+<style scoped>
+select {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: white;
+  color: #374151;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+select:hover {
+  border-color: #94a3b8;
+}
+</style>
