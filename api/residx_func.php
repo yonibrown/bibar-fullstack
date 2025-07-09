@@ -128,17 +128,34 @@ function residx_get_divisions($id, $prop)
                 $level_prop['parent_div'] = $parent_div;
             }
             $levelDivs = residx_get_level_divisions($id, $level_prop);
-            switch ($level['division_id']) {
-                case 0:
-                    // first division
-                    $selected_div = $levelDivs['list'][0]['id'];
-                    break;
-                case -1:
-                    // last division
-                    $selected_div = end($levelDivs)['list']['id'];
-                    break;
-                default:
-                    $selected_div = $level['division_id'];
+            
+            // Check if $levelDivs is valid and has the expected structure
+            if ($levelDivs && isset($levelDivs['list']) && is_array($levelDivs['list'])) {
+                switch ($level['division_id']) {
+                    case 0:
+                        // first division
+                        if (!empty($levelDivs['list'])) {
+                            $selected_div = $levelDivs['list'][0]['id'];
+                        } else {
+                            $selected_div = -999;
+                        }
+                        break;
+                    case -1:
+                        // last division
+                        if (!empty($levelDivs['list'])) {
+                            $last_item = end($levelDivs['list']);
+                            $selected_div = $last_item['id'];
+                        } else {
+                            $selected_div = -999;
+                        }
+                        break;
+                    default:
+                        $selected_div = $level['division_id'];
+                }
+            } else {
+                // Handle case where $levelDivs is invalid
+                $levelDivs = array("list" => array());
+                $selected_div = -999;
             }
         } else {
             // if the high level div is -999 return empty lists in lower levels
@@ -148,7 +165,7 @@ function residx_get_divisions($id, $prop)
 
         $level_divs = array(
             'level' => $level['level'],
-            'divisions' => $levelDivs['list'],
+            'divisions' => isset($levelDivs['list']) ? $levelDivs['list'] : array(),
             'selected_div' => $selected_div
         );
         array_push($divs, $level_divs);
