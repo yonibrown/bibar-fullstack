@@ -108,6 +108,9 @@ export class biProject {
       name: obj.data.name,
       desc: obj.data.desc,
       primaryLink: obj.data.primary_link,
+      bookStyle: obj.data.book_style || 0,
+      chapterStyle: obj.data.chapter_style || 0,
+      verseStyle: obj.data.verse_style || 0,
     };
 
     this._researches = biResearch.initList(obj.data.researches);
