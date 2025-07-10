@@ -605,9 +605,11 @@ class biBoardContent {
 
     this._src_from_division = +rec.src_from_division;
     this._src_from_word = +rec.src_from_word;
+    this._src_from_key = rec.src_from_key;
     this._src_from_name = rec.src_from_name;
     this._src_to_division = +rec.src_to_division;
     this._src_to_word = +rec.src_to_word;
+    this._src_to_key = rec.src_to_key;
     this._src_to_name = rec.src_to_name;
     this._gen_from_position = +rec.gen_from_position;
     this._gen_to_position = +rec.gen_to_position;
@@ -655,9 +657,11 @@ class biBoardContent {
           src_index: this._field._src_index,
           src_from_division: this._src_from_division,
           src_from_word: this._src_from_word,
+          src_from_key: this._src_from_key,
           src_from_name: this._src_from_name,
           src_to_division: this._src_to_division,
           src_to_word: this._src_to_word,
+          src_to_key: this._src_to_key,
           src_to_name: this._src_to_name,
           src_from_position: this._gen_from_position,
           src_to_position: this._gen_to_position,

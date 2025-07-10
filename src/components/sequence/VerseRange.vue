@@ -34,10 +34,10 @@
 
 <script setup>
 import SequenceKey from "../sequence/SequenceKey.vue";
-import { computed, provide, ref, watch } from "vue";
+import { computed, provide, ref, watch ,inject} from "vue";
 import { biResearch } from "../../store/biResearch.js";
 
-const props = defineProps(["part", "editable", "referenceStyle"]);
+const props = defineProps(["part", "editable", "referenceStyle", "project"]);
 const emit = defineEmits(["changeValue"]);
 
 const defaultIndex = { res: 1, col: 1, idx: 1 };
@@ -94,6 +94,9 @@ function displayRange() {
 
 const fromName = computed(function () {
   if (props.part) {
+    if (props.part.src_from_key) {
+      return props.part.src_from_key.map((key,idx) => key.nameArr[nameIdxArr.value[idx]]).join(" ");  
+    }
     return props.part.src_from_name.replaceAll(",", " ");
   }
   return "";
@@ -101,6 +104,9 @@ const fromName = computed(function () {
 
 const toName = computed(function () {
   if (props.part) {
+    if (props.part.src_to_key) {
+        return props.part.src_to_key.map((key,idx) => key.nameArr[nameIdxArr.value[idx]]).join(" ");
+    }
     return props.part.src_to_name.replaceAll(",", " ");
   }
   return "";
@@ -144,7 +150,38 @@ function submitValue() {
   emit("changeValue", changedAttr);
 }
 
+// Get the project to access individual style settings
+const projectRef = inject("project");
+const project = props.project || projectRef;
+console.log('Project available:', project?.value);
+
+// Compute nameIdxArr dynamically based on individual style settings
+// Watch for project attribute changes to ensure reactivity
+watch(() => project.value?.attr, () => {
+  console.log('Project attr changed:', project.value?.attr);
+}, { deep: true });
+
+const nameIdxArr = computed(function () {
+  console.log('nameIdxArr computed', project.value?.attr);
+  
+  if (project?.value?.attr) {
+    // Access each style individually to ensure reactivity
+    const bookStyle = project.value.attr.book_style ?? 0;
+    const chapterStyle = project.value.attr.chapter_style ?? 0;
+    const verseStyle = project.value.attr.verse_style ?? 0;
+    
+    console.log('Dynamic nameIdxArr', [bookStyle, chapterStyle, verseStyle]);
+    return [bookStyle, chapterStyle, verseStyle];
+  }
+  
+  // Fallback to the static reference style if project is not available
+  const styles = biResearch.getReferenceStyles();
+  console.log('Fallback nameIdxArr', styles[props.referenceStyle].nameIdxArr);
+  return styles[props.referenceStyle].nameIdxArr;
+});
+
 const title = computed(function () {
+  // console.log('title', props.part);
   if (fromName.value != "") {
     if (displayOneVerse.value) {
       return fromName.value;
