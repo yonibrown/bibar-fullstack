@@ -23,6 +23,7 @@ const emit = defineEmits([
 ]);
 
 const fieldMenuRef = ref();
+const project = inject("project");
 
 function show() {
   fieldMenuRef.value.show(event);
@@ -59,19 +60,32 @@ const fieldMenuData = computed(function () {
   }
 
   // 'verse reference style' options
-  const verseRefArr = biResearch.getReferenceStyles().map(function (st) {
-    return {
-      label: st.label,
+  const verseRefArr = [
+    {
+      label: "ברירת מחדל",
       icon:
-        props.field && props.field.referenceStyle == st.value
+        props.field && props.field.referenceStyle == -1
           ? "fa fa-check"
           : "",
-      checked: props.field && props.field.referenceStyle == st.value,
+      checked: props.field && props.field.referenceStyle == -1,
       command: () => {
-        emit("changeReferenceStyle", st.value);
+        emit("changeReferenceStyle", -1);
       },
-    };
-  });
+    },
+    ...biResearch.getReferenceStyles().map(function (st) {
+      return {
+        label: st.label,
+        icon:
+          props.field && props.field.referenceStyle == st.value
+            ? "fa fa-check"
+            : "",
+        checked: props.field && props.field.referenceStyle == st.value,
+        command: () => {
+          emit("changeReferenceStyle", st.value);
+        },
+      };
+    })
+  ];
 
   // main options
   const arr = [

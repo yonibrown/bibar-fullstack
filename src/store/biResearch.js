@@ -287,7 +287,7 @@ export class biResearch {
       {
         value: 1,
         label: 'מלכים א\' י"ח י"ב',
-        nameIdxArr: [1,1,1]
+        nameIdxArr: [1,2,2]
       },
       {
         value: 2,
