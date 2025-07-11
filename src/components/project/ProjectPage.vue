@@ -10,8 +10,14 @@
         <div
           class="tab"
           v-for="tab in tabs"
+          :key="tab.id"
           :style="{ width: tab.width_pct + '%' }"
         >
+          <div class="head">
+            <span class="menu-buttons">
+              <menu-button type="close" @click="removeTab(tab.id)"></menu-button>
+            </span>
+          </div>
           <element-list
             :elements="elements"
             :tab="tab.id"
@@ -31,6 +37,7 @@ import ElementList from "./ElementList.vue";
 import ProjectCard from "./ProjectCard.vue";
 import { ref, provide, computed } from "vue";
 import { biProject } from "../../store/biProject.js";
+import MenuButton from "../ui/MenuButton.vue";
 
 const props = defineProps(["id"]);
 const editMode = ref(true);
@@ -74,6 +81,10 @@ project.value.loadProject().then(function () {
 });
 
 function copyToClipboard() {}
+
+function removeTab(tabId) {
+  project.value.removeTab(tabId);
+}
 </script>
 
 <style scoped>
@@ -100,5 +111,10 @@ function copyToClipboard() {}
   display: flex;
   height: calc(100vh - 124px);
   flex-direction: row-reverse;
+}
+
+.head {
+  cursor: grab;
+  padding: 0em 0em 1em 0em;
 }
 </style>

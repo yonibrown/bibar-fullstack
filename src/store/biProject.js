@@ -258,4 +258,11 @@ export class biProject {
       type: "elements",
     });
   }
+
+  removeTab(tabId) {
+    const idx = this._tabs.findIndex(tab => tab.id === tabId);
+    if (idx !== -1) {
+      this._tabs.splice(idx, 1);
+    }
+  }
 }
