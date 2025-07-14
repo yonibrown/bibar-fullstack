@@ -65,11 +65,11 @@ export class ordering {
         idx: attr.source.idx + attr.steps,
       };
     }
-    const sourceItemPos = this._getPosition(attr.source.idx);
-    const targetItemPos = this._getPosition(attr.target.idx);
-
     if (attr.target.tab == attr.source.tab) {
       // same tab
+      const sourceItemPos = this._getPosition(attr.source.idx);
+      const targetItemPos = this._getPosition(attr.target.idx);
+
       if (attr.target.idx == attr.source.idx) {
         // nothing to move
         return;

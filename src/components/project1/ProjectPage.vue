@@ -10,7 +10,7 @@
       </project-card>
       <project-options v-show="showOptions">
       </project-options>
-      <div class="tab-box">
+      <div class="tab-list">
         <div
           class="tab"
           v-for="tab in tabs"
@@ -115,7 +115,7 @@ function removeTab(tabId) {
   position: relative;
 }
 
-.tab-box {
+.tab-list {
   display: flex;
   height: calc(100vh - 124px);
   flex-direction: row-reverse;

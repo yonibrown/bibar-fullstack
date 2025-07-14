@@ -6,7 +6,7 @@
         :copyToClipboard="copyToClipboard"
       >
       </project-card>
-      <div class="tab-box">
+      <div class="tab-list">
         <div
           class="tab"
           v-for="tab in tabs"
@@ -107,7 +107,7 @@ function removeTab(tabId) {
   flex-grow: 1;
 }
 
-.tab-box {
+.tab-list {
   display: flex;
   height: calc(100vh - 124px);
   flex-direction: row-reverse;
