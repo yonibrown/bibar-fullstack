@@ -66,6 +66,24 @@ const elements = computed(function () {
 });
 provide("elements", elements);
 
+// Add elementList computed property
+const elementList = computed(() => {
+  // Get all tab ids
+  const tabIds = project.value.tabs.map((tab) => tab.id);
+  // For each tab id, filter elements that belong to that tab
+  return tabIds.map((tabId) =>
+    project.value.elements
+      .filter((el) => el.tab === tabId)
+      .filter(function (a) {
+        return +a.position >= 0;
+      })
+      .sort(function (a, b) {
+        return a.position - b.position;
+      })
+  );
+});
+provide("elementList", elementList);
+
 const links = computed(function () {
   return project.value.links;
 });

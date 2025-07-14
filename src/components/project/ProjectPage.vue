@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section v-if="projectLoaded" >
+    <section v-if="projectLoaded">
       <project-card
         :openNewElement="openNewElement"
         :copyToClipboard="copyToClipboard"
@@ -15,7 +15,10 @@
         >
           <div class="head">
             <span class="menu-buttons">
-              <menu-button type="close" @click="removeTab(tab.id)"></menu-button>
+              <menu-button
+                type="close"
+                @click="removeTab(tab.id)"
+              ></menu-button>
             </span>
           </div>
           <element-list
@@ -59,6 +62,24 @@ const elements = computed(function () {
   return project.value.elements;
 });
 provide("elements", elements);
+
+// Add elementList computed property
+const elementList = computed(() => {
+  // Get all tab ids
+  const tabIds = project.value.tabs.map((tab) => tab.id);
+  // For each tab id, filter elements that belong to that tab
+  return tabIds.map((tabId) =>
+    project.value.elements
+      .filter((el) => el.tab === tabId)
+      .filter(function (a) {
+        return +a.position >= 0;
+      })
+      .sort(function (a, b) {
+        return a.position - b.position;
+      })
+  );
+});
+provide("elementList", elementList);
 
 const links = computed(function () {
   return project.value.links;
