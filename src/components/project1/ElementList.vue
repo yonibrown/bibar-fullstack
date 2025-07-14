@@ -1,7 +1,7 @@
 <template>
   <sortable-cell
     v-for="(elm, dispElmIdx) in dispElements"
-    :key="elm.id"
+    :key="dispElmIdx"
     :idx="dispElmIdx"
     :dragData="dragData"
     :moveElement="moveElement"
@@ -10,7 +10,7 @@
     <element-box
       :element="elm"
       @closeElement="closeElement(elm)"
-      :nextPos="ordElements.nextPos(dispElmIdx)"
+      :nextPos="ordElements.nextPos({ tab, idx: dispElmIdx })"
     ></element-box>
   </sortable-cell>
 </template>
@@ -22,32 +22,27 @@ import { provide, computed, ref, onUpdated, inject } from "vue";
 
 const props = defineProps(["elements", "tab"]);
 const project = inject("project");
+const elementList = inject("elementList");
 
 const dispElements = computed(function () {
-  return props.elements
-    .filter(function (a) {
-      return +a.position >= 0 && a.tab == props.tab;
-    })
-    .sort(function (a, b) {
-      return a.position - b.position;
-    });
+  return elementList.value[props.tab];
 });
 
 const ordElements = new ordering({
-  getSize: function () {
-    return dispElements.value.length;
+  getSize: function (attr) {
+    return elementList.value[attr.tab].length;
   },
-  getPosition: function (idx) {
-    return +dispElements.value[idx].position;
+  getPosition: function (attr) {
+    return +elementList.value[attr.tab][attr.idx].position;
   },
   setPosition: function (item, newPosition) {
     item.position = newPosition;
   },
-  getItem: function (idx) {
-    return dispElements.value[idx];
+  setTab: function (item, newTab) {
+    item.tab = newTab;
   },
-  setTab: function (idx, newVal) {
-    dispElements.value[idx].tab = newVal;
+  getItem: function (attr) {
+    return elementList.value[attr.tab][attr.idx];
   },
   commitChanges: saveElmList,
 });
@@ -91,15 +86,17 @@ onUpdated(function () {
 });
 
 function saveElmList() {
-  const elmList = dispElements.value.map(function (elm, idx) {
-    return {
-      id: elm.id,
-      position: idx + 1,
-    };
-  });
-  project.value.storeElementList({
-    elements: elmList,
-    tab: props.tab,
+  elementList.value.forEach(function (tab,tabIdx) {
+    const elmList = tab.map(function (elm, idx) {
+      return {
+        id: elm.id,
+        position: idx + 1,
+      };
+    });
+    project.value.storeElementList({
+      elements: elmList,
+      tab: tabIdx,
+    });
   });
 }
 
@@ -109,7 +106,7 @@ function closeElement(elm) {
 }
 
 function openNewElement() {
-  project.value.openNewElement(props.tab, ordElements.prevPos(0));
+  project.value.openNewElement(props.tab, ordElements.prevPos({tab: props.tab, idx: 0}));
 }
 defineExpose({ openNewElement });
 </script>

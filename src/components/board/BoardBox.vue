@@ -84,16 +84,16 @@ const ordFields = new ordering({
   getSize: function () {
     return boardFields.value.length;
   },
-  getPosition: function (idx) {
-    return +boardFields.value[idx].position;
+  getPosition: function (attr) {
+    return +boardFields.value[attr.idx].position;
   },
   setPosition: function (fld, newPosition) {
     fld.setPosition(newPosition);
   },
-  getItem: function (idx) {
-    return boardFields.value[idx];
-  },
   setTab: function (idx, newVal) {},
+  getItem: function (attr) {
+    return boardFields.value[attr.idx];
+  },
   commitChanges: function () {},
 });
 
@@ -169,16 +169,16 @@ const ordLines = new ordering({
   getSize: function () {
     return lines.value.length;
   },
-  getPosition: function (idx) {
-    return +lines.value[idx].position;
+  getPosition: function (attr) {
+    return +lines.value[attr.idx].position;
   },
   setPosition: function (line, newPosition) {
     line.setPosition(newPosition);
   },
-  getItem: function (idx) {
-    return lines.value[idx];
-  },
   setTab: function (idx, newVal) {},
+  getItem: function (attr) {
+    return lines.value[attr.idx];
+  },
   commitChanges: function () {},
 });
 

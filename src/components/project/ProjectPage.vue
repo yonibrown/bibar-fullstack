@@ -1,17 +1,26 @@
 <template>
   <div>
-    <section v-if="projectLoaded" >
+    <section v-if="projectLoaded">
       <project-card
         :openNewElement="openNewElement"
         :copyToClipboard="copyToClipboard"
       >
       </project-card>
-      <div class="tab-box">
+      <div class="tab-list">
         <div
           class="tab"
           v-for="tab in tabs"
+          :key="tab.id"
           :style="{ width: tab.width_pct + '%' }"
         >
+          <div class="head">
+            <span class="menu-buttons">
+              <menu-button
+                type="close"
+                @click="removeTab(tab.id)"
+              ></menu-button>
+            </span>
+          </div>
           <element-list
             :elements="elements"
             :tab="tab.id"
@@ -31,6 +40,7 @@ import ElementList from "./ElementList.vue";
 import ProjectCard from "./ProjectCard.vue";
 import { ref, provide, computed } from "vue";
 import { biProject } from "../../store/biProject.js";
+import MenuButton from "../ui/MenuButton.vue";
 
 const props = defineProps(["id"]);
 const editMode = ref(true);
@@ -53,6 +63,24 @@ const elements = computed(function () {
 });
 provide("elements", elements);
 
+// Add elementList computed property
+const elementList = computed(() => {
+  // Get all tab ids
+  const tabIds = project.value.tabs.map((tab) => tab.id);
+  // For each tab id, filter elements that belong to that tab
+  return tabIds.map((tabId) =>
+    project.value.elements
+      .filter((el) => el.tab === tabId)
+      .filter(function (a) {
+        return +a.position >= 0;
+      })
+      .sort(function (a, b) {
+        return a.position - b.position;
+      })
+  );
+});
+provide("elementList", elementList);
+
 const links = computed(function () {
   return project.value.links;
 });
@@ -74,6 +102,10 @@ project.value.loadProject().then(function () {
 });
 
 function copyToClipboard() {}
+
+function removeTab(tabId) {
+  project.value.removeTab(tabId);
+}
 </script>
 
 <style scoped>
@@ -96,9 +128,14 @@ function copyToClipboard() {}
   flex-grow: 1;
 }
 
-.tab-box {
+.tab-list {
   display: flex;
   height: calc(100vh - 124px);
   flex-direction: row-reverse;
+}
+
+.head {
+  cursor: grab;
+  padding: 0em 0em 1em 0em;
 }
 </style>
