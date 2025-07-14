@@ -261,6 +261,27 @@ function res_get_prt_list($id, $prop)
     while ($row = mysqli_fetch_array($result)) {
         $mark = sub_words($row['src_text'], $row['src_from_word'], $row['src_to_word']);
 
+        // Get src keys for from and to positions
+        $src_from_key = array();
+        $src_to_key = array();
+        
+        // Create index ID for residx_position_to_key
+        $indexId = array(
+            'res' => $row['src_research'],
+            'col' => $row['src_collection'],
+            'idx' => 1  // Default index
+        );
+        
+        // // Get from position src key
+        // if ($row['src_from_position'] > 0) {
+        //     $src_from_key = residx_position_to_key($indexId, array('position' => $row['src_from_position']));
+        // }
+        
+        // // Get to position src key
+        // if ($row['src_to_position'] > 0) {
+        //     $src_to_key = residx_position_to_key($indexId, array('position' => $row['src_to_position']));
+        // }
+
         array_push($list, array(
             "id" => (int) $row['part_id'],
             "col" => (int) $row['collection_id'],
@@ -271,6 +292,8 @@ function res_get_prt_list($id, $prop)
             "src_name" => $row['gen_from_name'],
             "src_from_name" => $row['gen_from_name'],
             "src_to_name" => $row['gen_to_name'],
+            // "src_from_key" => $src_from_key,
+            // "src_to_key" => $src_to_key,
             "src_from_text" => $row['src_text'],
             "src_to_text" => $row['gen_to_text'],
             "src_to_word_count" => $row['gen_to_word_count'],

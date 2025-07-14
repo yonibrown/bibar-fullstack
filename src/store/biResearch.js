@@ -226,6 +226,7 @@ export class biResearch {
 
   /* convert position/division to index key */
   static async getKey(seqIndex, prop) {
+    console.log('getKey', seqIndex, prop);
     const data = {
       type: "res_index",
       oper: "get_key",
@@ -286,7 +287,7 @@ export class biResearch {
       {
         value: 1,
         label: 'מלכים א\' י"ח י"ב',
-        nameIdxArr: [1,1,1]
+        nameIdxArr: [1,2,2]
       },
       {
         value: 2,

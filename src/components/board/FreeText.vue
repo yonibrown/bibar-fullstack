@@ -39,6 +39,6 @@ function submitText(text) {
 }
 
 function defaultName() {
-  console.log("defaultName");
+  // console.log("defaultName");
 }
 </script>

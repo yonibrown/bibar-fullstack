@@ -34,7 +34,7 @@
 
 <script setup>
 import SequenceKey from "../sequence/SequenceKey.vue";
-import { computed, provide, ref, watch } from "vue";
+import { computed, provide, ref, watch ,inject} from "vue";
 import { biResearch } from "../../store/biResearch.js";
 
 const props = defineProps(["part", "editable", "referenceStyle"]);
@@ -43,7 +43,7 @@ const emit = defineEmits(["changeValue"]);
 const defaultIndex = { res: 1, col: 1, idx: 1 };
 const defaultDivision = 972; /* Genesis,1,1 */
 
-console.log('props.part',props.part);
+// console.log('props.part',props.part);
 
 const fromPosition = computed(function () {
   if (props.part) {
@@ -74,7 +74,7 @@ const seqIndex = computed(function () {
     return {
       res: props.part.src_research,
       col: props.part.src_collection,
-      idx: props.part.src_index,
+      idx: props.part.src_index || 1,
     };
   }
   return defaultIndex;
@@ -94,6 +94,9 @@ function displayRange() {
 
 const fromName = computed(function () {
   if (props.part) {
+    if (props.part.src_from_key) {
+      return props.part.src_from_key.map((key,idx) => key.nameArr[nameIdxArr.value[idx]]).join(" ");  
+    }
     return props.part.src_from_name.replaceAll(",", " ");
   }
   return "";
@@ -101,6 +104,9 @@ const fromName = computed(function () {
 
 const toName = computed(function () {
   if (props.part) {
+    if (props.part.src_to_key) {
+        return props.part.src_to_key.map((key,idx) => key.nameArr[nameIdxArr.value[idx]]).join(" ");
+    }
     return props.part.src_to_name.replaceAll(",", " ");
   }
   return "";
@@ -144,12 +150,21 @@ function submitValue() {
   emit("changeValue", changedAttr);
 }
 
+const styles = biResearch.getReferenceStyles();
+const nameIdxArr = computed(function () {
+  if (props.referenceStyle == -1) {
+    return styles[0].nameIdxArr;
+  }
+  return styles[props.referenceStyle].nameIdxArr;
+});
+
 const title = computed(function () {
+  // console.log('title', props.part);
   if (fromName.value != "") {
-    if (toName.value != "") {
-      return fromName.value + " - " + toName.value;
+    if (displayOneVerse.value) {
+      return fromName.value;
     }
-    return fromName.value;
+    return fromName.value + " - " + toName.value;
   }
   if (props.editable) {
     return "בחר פסוק...";

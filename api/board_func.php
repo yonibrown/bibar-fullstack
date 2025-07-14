@@ -217,6 +217,27 @@ function brdcnt_get_content_basic($id)
         exit_error('Error 10 in elm_func.php: ' . mysqli_error($con));
     }
     if ($row = mysqli_fetch_array($result)) {
+        // Get src keys for from and to positions
+        $src_from_key = array();
+        $src_to_key = array();
+        
+        // Create index ID for residx_position_to_key
+        $indexId = array(
+            'res' => $row['src_research'],
+            'col' => $row['src_collection'],
+            'idx' => 1  // Default index
+        );
+        
+        // Get from division src key
+        if ($row['src_from_division'] > 0) {
+            $src_from_key = residx_position_to_key($indexId, array('division_id' => $row['src_from_division']));
+        }
+        
+        // Get to division src key
+        if ($row['src_to_division'] > 0) {
+            $src_to_key = residx_position_to_key($indexId, array('division_id' => $row['src_to_division']));
+        }
+
         $content = array(
             'field' => (int)$row['field_id'],
             'text' => $row['text'],
@@ -228,6 +249,8 @@ function brdcnt_get_content_basic($id)
             'src_to_word' => (int)$row['src_to_word'],
             'src_from_name' => $row['gen_from_name'],
             'src_to_name' => $row['gen_to_name'],
+            'src_from_key' => $src_from_key,
+            'src_to_key' => $src_to_key,
             'fields_generated' => $row['fields_generated'],
             'gen_from_position' => (float)$row['gen_from_position'],
             'gen_to_position' => (float)$row['gen_to_position'],
@@ -439,11 +462,34 @@ function brdcnt_update_generated_research($id, $content)
         exit_error('Error 21 in board_func.php: ' . mysqli_error($con));
     }
 
+    // // Get src keys for from and to positions
+    // $src_from_key = array();
+    // $src_to_key = array();
+    
+    // // Create index ID for residx_position_to_key
+    // $indexId = array(
+    //     'res' => $content['src_research'],
+    //     'col' => $content['src_collection'],
+    //     'idx' => 1  // Default index
+    // );
+    
+    // // Get from division src key
+    // if ($content['src_from_division'] > 0) {
+    //     $src_from_key = residx_position_to_key($indexId, array('division_id' => $content['src_from_division']));
+    // }
+    
+    // // Get to division src key
+    // if ($content['src_to_division'] > 0) {
+    //     $src_to_key = residx_position_to_key($indexId, array('division_id' => $content['src_to_division']));
+    // }
+
     return array_merge($content, array(
         "gen_from_position" => (float)$from_position,
         "gen_to_position" => (float)$to_position,
         "gen_from_text" => $row_from['text'],
         "gen_to_text" => $row_to['text']
+        // "src_from_key" => $src_from_key,
+        // "src_to_key" => $src_to_key
     ));
 }
 

@@ -34,7 +34,7 @@ function proj_get($id)
 
     $proj = $id['proj'];
 
-    $sql = "SELECT name,description,primary_link
+    $sql = "SELECT name,description,primary_link,book_style,chapter_style,verse_style
             FROM a_projects
             WHERE project_id = " . $proj;
     $result = mysqli_query($con, $sql);
@@ -52,6 +52,9 @@ function proj_get($id)
         'name' => $row['name'],
         'desc' => $row['description'],
         'primary_link' => (int) $row['primary_link'],
+        'book_style' => (int) $row['book_style'],
+        'chapter_style' => (int) $row['chapter_style'],
+        'verse_style' => (int) $row['verse_style'],
         'elements' => $elm_list,
         'links' => $lnk_list,
         'researches' => $res_list,
@@ -74,6 +77,12 @@ function proj_set($id, $prop)
         switch ($attr) {
             case "name":
                 $sql_set = $sql_set . $sep . $attr . " = '" . $val . "'";
+                $sep = ',';
+                break;
+            case "book_style":
+            case "chapter_style":
+            case "verse_style":
+                $sql_set = $sql_set . $sep . $attr . " = " . (int)$val;
                 $sep = ',';
                 break;
         }
@@ -107,11 +116,17 @@ function proj_create($prop)
                 (project_id, 
                 name, 
                 description,
-                primary_link) 
+                primary_link,
+                book_style,
+                chapter_style,
+                verse_style) 
             VALUES(" . $proj . ", 
                 '" . $prop['name'] . "', 
                 '" . $prop['desc'] . "',
-                1)";
+                1,
+                0,
+                0,
+                0)";
     $result = mysqli_query($con, $sql);
     if (!$result) {
         exit_error('Error 5 in proj_func.php: ' . mysqli_error($con));

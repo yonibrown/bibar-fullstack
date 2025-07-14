@@ -88,7 +88,7 @@ onMounted(setSize);
   overflow: auto;
   min-width: 100%;
 }
-.lastFieldWrapper {
+/* .lastFieldWrapper {
   width: 100vw;
-}
+} */
 </style>
