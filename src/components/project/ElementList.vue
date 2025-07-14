@@ -106,7 +106,7 @@ function closeElement(elm) {
 }
 
 function openNewElement() {
-  project.value.openNewElement(props.tab, ordElements.prevPos(0));
+  project.value.openNewElement(props.tab, ordElements.prevPos({tab: props.tab,idx:0}));
 }
 defineExpose({ openNewElement });
 </script>
