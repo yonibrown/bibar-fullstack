@@ -11,21 +11,14 @@
       <project-options v-show="showOptions">
       </project-options>
       <div class="tab-list">
-        <div
-          class="tab"
+        <tab-box
           v-for="tab in tabs"
           :key="tab.id"
-          :style="{ width: tab.width_pct + '%' }"
-        >
-          <span class="menu-buttons">
-            <menu-button type="close" @click="removeTab(tab.id)"></menu-button>
-          </span>
-          <element-list
-            :elements="elements"
-            :tab="tab.id"
-            ref="listRef"
-          ></element-list>
-        </div>
+          :tab="tab"
+          :elements="elements"
+          @removeTab="removeTab"
+          ref="tabBoxRef"
+        ></tab-box>
       </div>
     </section>
   </div>
@@ -33,11 +26,10 @@
 
 <script setup>
 import ProjectOptions from "./ProjectOptions.vue";
-import ElementList from "./ElementList.vue";
+import TabBox from "./TabBox.vue";
 import ProjectCard from "./ProjectCard.vue";
 import { ref, provide, computed } from "vue";
 import { biProject } from "../../store/biProject.js";
-import MenuButton from "../ui/MenuButton.vue";
 
 const props = defineProps(["id"]);
 
@@ -94,10 +86,10 @@ const researches = computed(function () {
 });
 provide("researches", researches);
 
-const listRef = ref([]);
+const tabBoxRef = ref([]);
 
 function openNewElement() {
-  listRef.value[0].openNewElement(0);
+  tabBoxRef.value[0].listRef.openNewElement(0);
 }
 
 project.value.loadProject().then(function () {
@@ -112,27 +104,6 @@ function removeTab(tabId) {
 </script>
 
 <style scoped>
-.menu-buttons {
-  float: left;
-}
-.title {
-  cursor: default;
-  /* float: right; */
-  font-weight: bold;
-  font-size: 1.8em;
-  margin: 0.83em 0;
-}
-
-.tab {
-  background-color: #ffffff;
-  border: solid 1px #b4b4b4;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
-  overflow-y: scroll;
-  overflow-x: hidden;
-  flex-grow: 1;
-  position: relative;
-}
-
 .tab-list {
   display: flex;
   height: calc(100vh - 124px);

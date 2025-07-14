@@ -195,7 +195,7 @@ function reorderLines(attr) {
 
 function addLine(attr) {
   element.value.addLine({
-    position: ordLines.prevPos(attr.idx),
+    position: ordLines.prevPos({idx:attr.idx}),
     content: [],
   });
 }
