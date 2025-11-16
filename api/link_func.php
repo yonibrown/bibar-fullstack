@@ -75,7 +75,7 @@ function lnk_create($prop)
         "desc" => $desc,
         "categories" => $catlist,
         "elements" => $elmlist,
-        "research_id" => $res
+        "research_id" => (int)$res
     ));
 }
 
@@ -172,7 +172,7 @@ function lnk_prop($id, $prop)
             "research_id" => (int)$prop['research_id']
         )),
         "elements" => lnk_get_elements($id),
-        "research_id" => $prop['research_id']
+        "research_id" => (int)$prop['research_id']
     ));
 }
 

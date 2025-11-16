@@ -140,5 +140,6 @@ defineExpose({ copyToClipboard });
 <style scoped>
 .text-box {
   padding: 15px;
+  line-height: 120%;
 }
 </style>
