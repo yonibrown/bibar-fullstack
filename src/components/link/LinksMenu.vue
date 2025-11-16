@@ -12,12 +12,16 @@
         :key="link.id"
         :link="link"
       ></links-menu-obj>
+      <select v-model="action">
+        <option value="choose">הוסף...</option>
+        <option v-for="res in otherResearches" value="res.id">{{ res.name }}</option>
+      </select>
     </base-menu>
   </base-droppable>
 </template>
 
 <script setup>
-import { inject, ref } from "vue";
+import { inject, ref, computed } from "vue";
 import LinksMenuObj from "./LinksMenuObj.vue";
 import { biLink } from "../../store/biLink.js";
 
@@ -39,7 +43,7 @@ function addToLink(dragData) {
   const linkId = +dragData.linkId;
   if (linkId != 0) {
     const link = project.value.getLink({ id: linkId });
-    link.addElementToLink( element.value.id);
+    link.addElementToLink(element.value.id);
     return;
   }
 
@@ -47,7 +51,7 @@ function addToLink(dragData) {
   if (resId != 0) {
     const link = project.value.getLink({ res: resId });
     if (link) {
-      link.addElementToLink( element.value.id);
+      link.addElementToLink(element.value.id);
     } else {
       biLink.createLink({
         researchId: resId,
@@ -57,10 +61,44 @@ function addToLink(dragData) {
     return;
   }
 }
+
+const researches = inject("researches");
+
+const otherResearches = computed(() => {
+  // Collect IDs that are already in links
+  const linkResearchIds = links.value?.map(l => l.research_id) || [];
+  console.log('linkResearchIds',linkResearchIds);
+  console.log('links.value',links.value);
+  console.log('researches.value',researches.value);
+  console.log(researches.value);
+  // Return researches which are not in those IDs
+  return researches.value?.filter(res => !linkResearchIds.includes(res.id)) || [];
+});
+
+const action = ref("choose");
 </script>
 
 <style scoped>
 .menu * {
   margin-left: 3px;
+}
+select {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: white;
+  color: #374151;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+select:hover {
+  border-color: #94a3b8;
 }
 </style>
